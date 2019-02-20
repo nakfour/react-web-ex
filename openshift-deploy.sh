@@ -1,8 +1,8 @@
 #!/bin/bash
 set -x
 
-
-oc process -f ./openshift/build.yml | oc create -f -
-oc process -f ./openshift/nginx.yml | oc create -f -
+oc process -f ./openshift/nodejs-server.yml | oc create -f -
+oc process -f ./openshift/react-web-app.yml | oc create -f -
+oc process -f ./openshift/nginx-ex.yml | oc create -f -
 
 

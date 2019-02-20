@@ -5,10 +5,84 @@ metadata:
   name: react-web-app
   annotations:
     iconClass: icon-jboss
-    tags: react, web app
-    description: Serving a react web app on Nginx
+    tags: nodejs, react, web app
+    template.openshift.io/provider-display-name: "Red Hat, Inc."
+    description: Just building a little react app with a web builder
+
+parameters:
+  - name: SOURCE_REPOSITORY_URL
+    description: The source URL for the application
+    displayName: Source URL
+    value: https://github.com/cfchase/react-web-ex
+    required: true
+  - name: SOURCE_REPOSITORY_REF
+    description: The branch name for the application
+    displayName: Source Branch
+    value: master
+    required: true
+  - name: SOURCE_REPOSITORY_DIR
+    description: The location within the source repo of the application
+    displayName: Source Directory
+    value: /react-web-app
+    required: true
+  - name: OUTPUT_DIR
+    description: The location of the compiled static files from your web apps builder
+    displayName: Output Directory
+    value: build
+    required: false
 
 objects:
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      name: react-web-app-builder
+    spec: {}
+
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      name: web-app-builder-runtime
+    spec:
+      tags:
+        - name: latest
+          from:
+            kind: DockerImage
+            name: nodeshift/centos7-s2i-web-app:10.x
+
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      name: react-web-app-builder
+    spec:
+      output:
+        to:
+          kind: ImageStreamTag
+          name: react-web-app-builder:latest
+      postCommit: {}
+      resources: {}
+      source:
+        git:
+          uri: ${SOURCE_REPOSITORY_URL}
+          ref: ${SOURCE_REPOSITORY_REF}
+        contextDir: ${SOURCE_REPOSITORY_DIR}
+        type: Git
+      strategy:
+        sourceStrategy:
+          env:
+            - name: OUTPUT_DIR
+              value: ${OUTPUT_DIR}
+          from:
+            kind: ImageStreamTag
+            name: web-app-builder-runtime:latest
+          incremental: true
+        type: Source
+      triggers:
+        - type: ConfigChange
+        - imageChange: {}
+          type: ImageChange
+    status:
+      lastVersion: 0
+
   - apiVersion: v1
     kind: ImageStream
     metadata:
@@ -134,3 +208,4 @@ objects:
       to:
         kind: Service
         name: react-web-app
+

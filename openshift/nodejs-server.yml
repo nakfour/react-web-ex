@@ -144,16 +144,16 @@ objects:
       selector:
         deploymentconfig: ${APPLICATION_NAME}
 
-  - apiVersion: v1
-    kind: Route
-    metadata:
-      labels:
-        app: ${APPLICATION_NAME}
-      name: ui
-    spec:
-      port:
-        targetPort: 8080-tcp
-      to:
-        kind: Service
-        name: ${APPLICATION_NAME}
+#  - apiVersion: v1
+#    kind: Route
+#    metadata:
+#      labels:
+#        app: ${APPLICATION_NAME}
+#      name: ui
+#    spec:
+#      port:
+#        targetPort: 8080-tcp
+#      to:
+#        kind: Service
+#        name: ${APPLICATION_NAME}
 

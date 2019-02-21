@@ -18,7 +18,7 @@ const init = async () => {
   await server.register(Inert);
   await server.register(HapiPino);
 
-  require("./routes/api/status")(server);
+  require("./routes/status")(server);
 
   await server.start();
   console.log(`Server running at: ${server.info.uri}`);

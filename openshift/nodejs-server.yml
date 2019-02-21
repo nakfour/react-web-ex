@@ -91,15 +91,7 @@ objects:
             deploymentconfig: ${APPLICATION_NAME}
         spec:
           containers:
-            - env:
-              - name: IP
-                value: "${IP}"
-              - name: PORT
-                value: '${PORT}'
-              envFrom:
-                - secretRef:
-                    name: ${APPLICATION_NAME}
-              image: ${APPLICATION_NAME}
+            - image: ${APPLICATION_NAME}
               imagePullPolicy: Always
               name: ${APPLICATION_NAME}
               ports:
@@ -110,12 +102,12 @@ objects:
               terminationMessagePolicy: File
               readinessProbe:
                 httpGet:
-                  path: /api/status
+                  path: /status
                   port: 8080
                   scheme: HTTP
               livenessProbe:
                 httpGet:
-                  path: /api/status
+                  path: /status
                   port: 8080
                   scheme: HTTP
                 initialDelaySeconds: 60

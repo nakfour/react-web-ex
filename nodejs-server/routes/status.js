@@ -1,7 +1,7 @@
 handler = (server) => {
   server.route({
     method: "GET",
-    path: "/api/status",
+    path: "/status",
     handler: (request, h) => {
       return request.server.app.status;
     }

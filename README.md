@@ -19,7 +19,31 @@ minishift up
 NodeJS rest server with a single endpoint `GET /api/status`.  The service is NOT exposed via a route and is only available internally.
 
 ## react-web-app
-React app which requests /api/status from a configured service.  The nginx.conf file has configured [/api](https://github.com/cfchase/react-web-ex/blob/master/react-web-app/public/nginx.conf#L56-L62) calls to be routed to the nodejs server.
+React app which requests /api/status from a configured service.  The nginx.conf file has [configured](https://github.com/cfchase/react-web-ex/blob/master/react-web-app/public/nginx.conf#L56-L62) `/api` calls to be routed to the nodejs server.
+```
+# /public/nginx.conf
+    server {
+        ...
+        
+        location /api/ {
+            proxy_pass http://nodejs-server:8080/;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+```
+This is copied in automatically by create-react-app since it's in the public folder, but in a different framework you may need manually copy the file in a postbuild step similar to the following.
+```
+{
+  "name": "some-other-web-app",
+  ...
+  "scripts": {
+    ...
+    "postbuild": "cp configs/nginx.conf build_output_folder",
+  },
+```
 
 ## nginx-ex
 Traditional nginx s2i project with an nginx.conf file at it's root.  Uses the built assets from react-web-app and similarly calls `GET /api/status`

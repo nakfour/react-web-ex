@@ -32,7 +32,7 @@ parameters:
     displayName: Git Repository URL
     description: The URL of the repository with your application source code.
     required: true
-    value: https://github.com/cfchase/react-web-ex
+    value: https://github.com/nakfour/react-web-ex
   - name: SOURCE_REPOSITORY_REF
     displayName: Git Reference
     description: Set this to a branch name, tag or other ref of your repository if you
